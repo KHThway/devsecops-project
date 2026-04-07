@@ -1,0 +1,31 @@
+name: DevSecOps Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Build Docker Image
+        run: docker build -t juice-shop:latest .
+
+      - name: Install Trivy
+        run: |
+          sudo apt-get install wget -y
+          wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.0_Linux-64bit.deb
+          sudo dpkg -i trivy_0.50.0_Linux-64bit.deb
+
+      - name: Run Trivy Scan
+        run: |
+          trivy image --exit-code 1 \
+          --severity HIGH,CRITICAL \
+          juice-shop:latest
+
+      - name: Push Image (if secure)
+        run: echo "Push to Docker Hub or ECR"
