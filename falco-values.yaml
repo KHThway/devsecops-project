@@ -1,0 +1,7 @@
+customRules: {}
+
+falco:
+  program_output:
+    enabled: true
+    keep_alive: false
+    program: "curl -X POST -H 'Content-type: application/json' --data '{\"text\":\"Falco Alert: %output\"}' https://hooks.slack.com/services/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"
